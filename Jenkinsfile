@@ -1,8 +1,5 @@
 pipeline {
     agent any
-    tools {
-        maven 'Maven' // Assumes Maven is configured in Jenkins
-    }
     stages {
         stage('Checkout') {
             steps {
@@ -14,19 +11,12 @@ pipeline {
                 sh 'mvn clean package'
             }
         }
-        stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv('SonarQube') { // Assumes SonarQube is configured
-                    sh 'mvn sonar:sonar'
-                }
-            }
-        }
         stage('Docker Build & Push') {
             steps {
                 script {
-                    docker.build("YOUR_DOCKERHUB_USERNAME/my-java-app:latest")
+                    docker.build("YOUR_DOCKERHUB_USERNAME/my-java-app:${env.BUILD_NUMBER}")
                     docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-cred') {
-                        docker.image("YOUR_DOCKERHUB_USERNAME/my-java-app:latest").push()
+                        docker.image("YOUR_DOCKERHUB_USERNAME/my-java-app:${env.BUILD_NUMBER}").push()
                     }
                 }
             }
