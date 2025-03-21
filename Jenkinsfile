@@ -14,9 +14,9 @@ pipeline {
         stage('Docker Build & Push') {
             steps {
                 script {
-                    docker.build("YOUR_DOCKERHUB_USERNAME/my-java-app:${env.BUILD_NUMBER}")
+                    docker.build("josejac/my-java-app:${env.BUILD_NUMBER}")
                     docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-cred') {
-                        docker.image("YOUR_DOCKERHUB_USERNAME/my-java-app:${env.BUILD_NUMBER}").push()
+                        docker.image("josejac/my-java-app:${env.BUILD_NUMBER}").push()
                     }
                 }
             }
